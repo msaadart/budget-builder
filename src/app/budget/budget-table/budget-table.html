@@ -1,0 +1,55 @@
+<!-- Excel Style Grid Wrapper -->
+  <div class="border border-slate-400 shadow-sm overflow-auto bg-white">
+    <div class="grid text-sm" [style.gridTemplateColumns]="'220px repeat(' + store.months().length + ', 120px)'">
+
+      <!-- Excel Header Blank Cell -->
+      <div class="h-9 bg-slate-100 border border-slate-300"></div>
+
+      <!-- Excel Column Headers -->
+      @for(m of store.months(); track $index) {
+        <div class="h-9 flex items-center justify-center bg-blue-50 font-semibold border border-slate-300 text-xs uppercase">
+          {{ m }}
+        </div>
+      }
+
+      <!-- Parent Categories -->
+      @for(parent of store.categories(); track parent.id) {
+
+        <!-- Parent Row Header -->
+        <div class="col-span-full bg-slate-200 font-bold text-slate-800 px-3 py-2 border-y border-slate-400 uppercase">
+          {{ parent.name }} <span class="text-[10px] lowercase">({{ parent.type }})</span>
+        </div>
+
+        <!-- Sub Categories -->
+        @for(sub of parent.subCategories; track sub.id) {
+
+          <!-- Subcategory Row Header -->
+          <div class="h-9 flex items-center px-3 border border-slate-300 bg-green-50 font-medium whitespace-nowrap">
+            {{ sub.name }}
+          </div>
+
+          <!-- Excel Input Cells -->
+          @for(m of store.months(); track $index; let i = $index) {
+            <div class="border border-slate-300">
+              <input
+                type="number"
+                class="w-full h-9 text-right px-2 border-0 focus:outline-none focus:ring-1 focus:ring-blue-500 caret-blue-600 text-sm"
+                [value]="getValue(sub, m)" (input)="onInput($event, parent.id, sub.id, m)" (contextmenu)="onRightClick($event, parent.id, sub.id)"
+              />
+            </div>
+          }
+        }
+
+        <!-- Subtotal Row -->
+        <div class="h-9 flex items-center font-semibold bg-yellow-50 border border-slate-300 px-3">
+          Sub Total
+        </div>
+
+        @for (m of store.months(); track $index) {
+          <div class="h-9 flex items-center justify-end font-semibold bg-yellow-50 border border-slate-300 px-3">
+            {{ calcSubTotal(parent, m) }}
+          </div>
+        }
+      }
+    </div>
+  </div>

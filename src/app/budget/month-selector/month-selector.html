@@ -1,0 +1,8 @@
+ <div class="flex gap-2 items-center">
+      <label>Start:</label>
+      <input type="month" #start />
+      <label>End:</label>
+      <input type="month" #end />
+      <button class="px-3 py-1 bg-blue-600 text-white rounded" (click)="apply(start.value, end.value)">Apply</button>
+      <button class="px-3 py-1 bg-gray-200 rounded" (click)="reset()">Reset 2024</button>
+    </div>
